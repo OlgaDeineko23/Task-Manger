@@ -1,0 +1,101 @@
+<div class="to-do">
+  <div class="to-do-header">
+    <h1>Task Manager</h1>
+  </div>
+  <div class="container">
+    <div class="col-xl-12 col-lg-12  col-md-12">
+      <div class="row to-do-filter">
+        <div class="col-xl-10 col-lg-10  col-md-10">
+          <div ngbDropdown class="d-inline-block">
+            <button class="btn btn-outline-primary select" id="dropdownBasic1" ngbDropdownToggle>Sort by:
+              <span class="sort">{{order.name}}</span>
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button class="dropdown-item" *ngFor="let item of orderList" (click)="changeOrder(item)">{{item.name}}</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-2 col-lg-2  col-md-2 text-right">
+          <button class="btn btn-primary" (click)="showNewForm()">
+            ADD TASK
+          </button>
+        </div>
+      </div>
+      <div class="row to-do-body" *ngFor="let todo of todos| orderBy: order.order" [ngClass]="{'to-do-resolved':todo.done == true}">
+        <div class="col-xl-1 col-lg-1 col-md-1 text-center to-do-checkbox-wrapper"
+             placement="top"
+             ngbTooltip="If you want to change status please click on the 'Edit button'">
+          <input class="form-control to-do-checkbox" type="checkbox" [checked]="todo.done" [disabled]="true">
+        </div>
+        <div class="col-xl-9 col-lg-9 col-md-9">
+          <div class="row">
+            <h5 class="to-do-subject">{{ todo.subject }}</h5>
+          </div>
+          <div class="row">
+            <p class="to-do-description">{{ todo.description }}</p>
+          </div>
+          <div class="row to-do-info">
+            <div class="col-md-3">
+              <span>Due:</span> {{ todo.due | date: 'EE, MMM dd' }}
+            </div>
+            <div class="col-md-3">
+              <span>Category:</span> {{ todo.category }}
+            </div>
+            <div class="col-md-3">
+            <span class="to-do-priority" [ngClass]="
+              {'to-do-priority-low':todo.priority == 'Low',
+              'to-do-priority-normal':todo.priority == 'Normal',
+              'to-do-priority-high':todo.priority == 'High',
+              'to-do-priority-urgent':todo.priority == 'Urgent'}">
+              {{ todo.priority }}
+            </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-2 col-lg-2 col-md-2 to-do-btns">
+          <button class="btn btn-primary btn-outline-primary" (click)="showEditForm(todo)"
+                  placement="top"
+                  ngbTooltip="Edit">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <button class="btn btn-danger btn-outline-danger" (click)="removeToDo(todo)"
+                  placement="top"
+                  ngbTooltip="Delete">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+      <form *ngIf="showForm()" [formGroup]="formGroup" (ngSubmit)="saveTodo(formGroup.value)">
+        <h2>{{headerText}}</h2>
+        <div>Subject <input class="form-control" type="text" name="subject" formControlName="subject"/></div>
+        <div class="form-group">
+          <label for="descriptionTextarea">Description:</label>
+          <textarea class="form-control" rows="5" id="descriptionTextarea" name="description" formControlName="description"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="prioritySelect">Priority</label>
+          <select class="form-control" id="prioritySelect" name="priority" formControlName="priority">
+            <option *ngFor="let option of priorityTypes" [value]="option">{{option}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="categorySelect">Category</label>
+          <select class="form-control" id="categorySelect" name="category" formControlName="category">
+            <option *ngFor="let option of categoryTypes" [value]="option">{{option}}</option>
+          </select>
+        </div>
+        <p>Due <input class="form-control" type="date" name="due" formControlName="due"/></p>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox"  name="done" formControlName="done" id="defaultCheck1">
+          <label class="form-check-label" for="defaultCheck1">
+            Done
+          </label>
+        </div>
+        <div>
+          <input type="submit" class="btn btn-primary btn-lg" value="Save">
+          <input type="button" class="btn btn-warning btn-lg" value="Cancel" (click)="cancelEditTodo()">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
