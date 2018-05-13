@@ -4,6 +4,6 @@ export interface ITodo {
   description: string;
   priority: string;
   category: string;
-  due: Date;
+  due: string;
   done: Boolean;
 }
