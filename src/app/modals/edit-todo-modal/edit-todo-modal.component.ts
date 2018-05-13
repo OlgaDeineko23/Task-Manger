@@ -48,7 +48,7 @@ export class EditTodoModalComponent implements OnInit, OnDestroy {
       this._modal.close();
     } else {
       let idArray = this.todos.map(x => x.id);
-      todo.id = Math.max.apply(null, idArray);
+      todo.id = Math.max.apply(null, idArray) + 1;
       this._todoService.addTodo(todo);
       this._modal.close();
     }
