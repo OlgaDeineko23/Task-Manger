@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="col-xl-2 col-lg-2  col-md-2 text-right">
-          <button class="btn btn-primary" (click)="showNewForm()">
+          <button class="btn btn-primary" (click)="showCreateModal()">
             ADD TASK
           </button>
         </div>
@@ -53,7 +53,7 @@
           </div>
         </div>
         <div class="col-xl-2 col-lg-2 col-md-2 to-do-btns">
-          <button class="btn btn-primary btn-outline-primary" (click)="showEditForm(todo)"
+          <button class="btn btn-primary btn-outline-primary" (click)="showEditModal(todo)"
                   placement="top"
                   ngbTooltip="Edit">
             <i class="fas fa-pencil-alt"></i>
@@ -65,37 +65,6 @@
           </button>
         </div>
       </div>
-      <form *ngIf="showForm()" [formGroup]="formGroup" (ngSubmit)="saveTodo(formGroup.value)">
-        <h2>{{headerText}}</h2>
-        <div>Subject <input class="form-control" type="text" name="subject" formControlName="subject"/></div>
-        <div class="form-group">
-          <label for="descriptionTextarea">Description:</label>
-          <textarea class="form-control" rows="5" id="descriptionTextarea" name="description" formControlName="description"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="prioritySelect">Priority</label>
-          <select class="form-control" id="prioritySelect" name="priority" formControlName="priority">
-            <option *ngFor="let option of priorityTypes" [value]="option">{{option}}</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="categorySelect">Category</label>
-          <select class="form-control" id="categorySelect" name="category" formControlName="category">
-            <option *ngFor="let option of categoryTypes" [value]="option">{{option}}</option>
-          </select>
-        </div>
-        <p>Due <input class="form-control" type="date" name="due" formControlName="due"/></p>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox"  name="done" formControlName="done" id="defaultCheck1">
-          <label class="form-check-label" for="defaultCheck1">
-            Done
-          </label>
-        </div>
-        <div>
-          <input type="submit" class="btn btn-primary btn-lg" value="Save">
-          <input type="button" class="btn btn-warning btn-lg" value="Cancel" (click)="cancelEditTodo()">
-        </div>
-      </form>
     </div>
   </div>
 </div>

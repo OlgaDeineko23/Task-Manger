@@ -1,0 +1,44 @@
+<div class="modal-header">
+  <h3 class="modal-title" id="modal-title">{{modalTitle}}</h3>
+</div>
+<div class="modal-body" id="modal-body">
+<form [formGroup]="formGroup" (ngSubmit)="saveTodo(formGroup.value)">
+  <div>Subject <input class="form-control" type="text" name="subject" formControlName="subject"/></div>
+  <div class="form-group">
+    <label for="descriptionTextarea">Description:</label>
+    <textarea class="form-control" rows="5" id="descriptionTextarea" name="description" formControlName="description"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="prioritySelect">Priority</label>
+    <select class="form-control" id="prioritySelect" name="priority" formControlName="priority">
+      <option *ngFor="let option of priorityTypes" [value]="option">{{option}}</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="categorySelect">Category</label>
+    <select class="form-control" id="categorySelect" name="category" formControlName="category">
+      <option *ngFor="let option of categoryTypes" [value]="option">{{option}}</option>
+    </select>
+  </div>
+  <p>Due <input class="form-control" type="date" name="due" formControlName="due"/></p>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox"  name="done" formControlName="done" id="defaultCheck1">
+    <label class="form-check-label" for="defaultCheck1">
+      Done
+    </label>
+  </div>
+  <!--actions-->
+  <div class="modal-footer">
+    <button class="btn"
+            type="button"
+            (click)="_modal.dismiss()">
+      Cancel
+    </button>
+
+    <button class="btn btn-primary"
+            type="submit">
+      Save
+    </button>
+  </div><!--END: actions-->
+</form>
+</div>

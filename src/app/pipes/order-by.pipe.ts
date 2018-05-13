@@ -3,7 +3,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 type TDirection = 'asc' | 'desc';
 
 @Pipe({
-  name: 'orderBy'
+  name: 'orderBy',
+  pure: false
 })
 export class OrderByPipe implements PipeTransform {
 

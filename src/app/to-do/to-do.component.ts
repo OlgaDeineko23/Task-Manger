@@ -1,91 +1,75 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TodoService} from '../services/to-do.service';
 import {ITodo} from '../interfaces/to-do';
 import {DatePipe} from '@angular/common';
-import {SaveMode} from '../enums/save-mode.enum';
-import { CATEGORY_TYPES, PRIORITY_TYPES, ORDER_LIST } from '../constants';
+import {ORDER_LIST} from '../constants';
 import {IOrderList} from '../interfaces/i-order-list';
+import {AnonymousSubscription} from 'rxjs/Subscription';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {EditTodoModalComponent} from '../modals/edit-todo-modal/edit-todo-modal.component';
 
 @Component({
   selector: 'app-to-do',
   templateUrl: './to-do.component.html',
   styleUrls: ['./to-do.component.scss']
 })
-export class ToDoComponent implements OnInit {
+export class ToDoComponent implements OnInit, OnDestroy {
 
-  formGroup: FormGroup;
   todos: ITodo[];
-  saveMode: SaveMode = SaveMode.None;
   headerText: string;
   orderList = ORDER_LIST;
   order: IOrderList;
-  categoryTypes = CATEGORY_TYPES;
-  priorityTypes = PRIORITY_TYPES;
-  constructor(private _todoService: TodoService, private _formBuilder: FormBuilder) {
-    this.formGroup = _formBuilder.group({
-      'id': '',
-      'subject': '',
-      'description': '',
-      'priority': '',
-      'category': '',
-      'due': '',
-      'done': ''});
+
+  private _todoSub: AnonymousSubscription;
+
+  constructor(private _todoService: TodoService, public _modal: NgbModal) {
   }
 
   ngOnInit() {
-    this.getTodos();
+    this._todoService.getTodosFromData();
     this.order = this.orderList[0];
-  }
 
-  getTodos() {
-    this.todos = this._todoService.getTodosFromData();
-  }
+    this._todoSub = this._todoService.todo.subscribe((res) => {
+      this.todos = res;
+    });
 
-  saveTodo(todo: ITodo) {
-    if (todo.id) {
-      this._todoService.updateTodo(todo);
-    } else {
-      this._todoService.addTodo(todo);
-    }
-    this.saveMode = SaveMode.None;
   }
 
   removeToDo(todo: ITodo) {
     this._todoService.deleteTodo(todo);
   }
 
-  cancelEditTodo() {
-    this.formGroup.reset();
-    this.saveMode = SaveMode.None;
-  }
-
-  showEditForm(todo: ITodo) {
+  showEditModal(todo: ITodo) {
     if (!todo) {
       return;
     }
-    this.saveMode = SaveMode.Edit;
     this.headerText = 'Edit To-Do';
-    const editedTodo = Object.assign({}, todo, { due: this.applyLocale(todo.due) });
-    this.formGroup.setValue(editedTodo);
+    const editedTodo = Object.assign({}, todo, {due: this.applyLocale(todo.due)});
+    let editTodoModal = this._modal.open(EditTodoModalComponent, {
+      size: 'lg'
+    });
+    editTodoModal.componentInstance.todo = editedTodo;
+    editTodoModal.componentInstance.modalTitle = this.headerText;
   }
 
-  showNewForm() {
-    this.formGroup.reset();
-    this.saveMode = SaveMode.New;
+  showCreateModal() {
     this.headerText = 'New To-Do';
-  }
-
-  showForm() {
-    return this.saveMode !== SaveMode.None;
+    let createTodoModal = this._modal.open(EditTodoModalComponent, {
+      size: 'lg'
+    });
+    createTodoModal.componentInstance.modalTitle = this.headerText;
   }
 
   applyLocale(due) {
     return new DatePipe(navigator.language).transform(due, 'y-MM-dd');
   }
 
-  changeOrder(item){
+  changeOrder(item) {
     this.order = item;
+  }
+
+  ngOnDestroy() {
+    this._todoSub.unsubscribe();
   }
 
 }

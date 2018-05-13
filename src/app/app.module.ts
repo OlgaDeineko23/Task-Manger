@@ -9,13 +9,15 @@ import { TodoService } from './services/to-do.service';
 import { FontsService } from '../fonts/fonts.service';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OrderByPipe } from './pipes/order-by.pipe';
+import { EditTodoModalComponent } from './modals/edit-todo-modal/edit-todo-modal.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ToDoComponent,
-    OrderByPipe
+    OrderByPipe,
+    EditTodoModalComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +26,7 @@ import { OrderByPipe } from './pipes/order-by.pipe';
     NgbModule.forRoot(),
   ],
   providers: [TodoService, FontsService],
+  entryComponents:[EditTodoModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
